@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#f5f2eb">
+  <meta name="description" content="Un espacio para observar el pulso: señal PPG, intervalos y frecuencia enviados por Arduino.">
+  <title>Pulso · Monitor cardíaco con Arduino</title>
+  <link rel="stylesheet" href="./styles.css">
+  <script type="module" src="./app.js"></script>
+</head>
+<body>
+  <svg class="svg-definitions" aria-hidden="true"><defs>
+    <symbol id="icon-usb" viewBox="0 0 24 24"><path d="M12 20V4m-3 3 3-3 3 3M12 16l-5-4V9m5 4 5-4V6"/><circle cx="12" cy="20" r="1.5"/><circle cx="7" cy="8" r="1"/><path d="M16 3h3v3h-3z"/></symbol>
+    <symbol id="icon-play" viewBox="0 0 24 24"><path d="m9 5 11 7-11 7z"/></symbol>
+    <symbol id="icon-pause" viewBox="0 0 24 24"><path d="M8 5v14M16 5v14"/></symbol>
+    <symbol id="icon-download" viewBox="0 0 24 24"><path d="M12 3v12m-4-4 4 4 4-4M4 16v5h16v-5"/></symbol>
+    <symbol id="icon-help" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9 9a3 3 0 1 1 4 2.8c-1 .4-1 1-1 2.2m0 3h.01"/></symbol>
+    <symbol id="icon-arrow" viewBox="0 0 24 24"><path d="M5 12h14m-5-5 5 5-5 5"/></symbol>
+  </defs></svg>
+
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="./" aria-label="Pulso, inicio"><span class="brand-symbol" aria-hidden="true"><svg viewBox="0 0 30 30"><path d="M3 15h6l3-7 6 14 3-7h6"/></svg></span>pulso<span class="brand-dot">.</span></a>
+      <span class="brand-caption">EL LENGUAJE DE TUS LATIDOS</span>
+      <div class="topbar-actions">
+        <span class="source-pill" id="source-pill"><i></i><span id="source-label">Demostración</span></span>
+        <button class="primary-button" id="connect-button"><svg><use href="#icon-usb"/></svg><span>Conectar Arduino</span></button>
+      </div>
+    </header>
+
+    <main>
+      <section class="page-intro" aria-labelledby="page-title">
+        <div><p class="eyebrow">BIOSEÑALES / MONITOR EN TIEMPO REAL</p><h1 id="page-title">Cada latido cuenta<span>.</span></h1><p class="intro-copy">Observa el ritmo. Explora la señal. Conecta con tu pulso.</p></div>
+        <button class="text-button help-trigger" aria-haspopup="dialog"><svg><use href="#icon-help"/></svg>Cómo funciona<svg class="arrow"><use href="#icon-arrow"/></svg></button>
+      </section>
+
+      <div class="demo-notice" id="demo-notice"><span class="notice-dot"></span><p><strong>Estás viendo una demostración.</strong> La señal y los valores son simulados. Conecta tu Arduino para ver mediciones reales.</p><button id="stop-demo" class="notice-button">Salir de demo <span aria-hidden="true">↗</span></button></div>
+
+      <section class="overview" aria-label="Lecturas del pulso">
+        <div class="rate-panel">
+          <div class="metric-label"><span class="small-square"></span>FRECUENCIA ESTIMADA</div>
+          <div class="big-number"><span id="bpm-value">—</span><span class="big-unit">BPM</span></div>
+          <p class="metric-description">Latidos por minuto</p>
+          <div class="signal-status" id="reading-status"><i></i><span>Datos de demostración</span></div>
+          <div class="mini-caption"><span class="tiny-rule"></span>Un instante de tu ritmo.</div>
+        </div>
+
+        <div class="details-panel">
+          <div class="detail-metric"><p class="metric-label">INTERVALO ENTRE PULSOS</p><div class="detail-number"><span id="ibi-value">—</span><span>ms</span></div><p>Tiempo entre dos latidos detectados.</p></div>
+          <div class="detail-metric amplitude-metric"><p class="metric-label">AMPLITUD DE LA SEÑAL</p><div class="detail-number"><span id="amplitude-value">—</span><span>ADC</span></div><p>Pico a pico durante los últimos 2 s.</p></div>
+        </div>
+
+        <figure class="heart-panel">
+          <div class="heart-topline"><span class="metric-label">EL PULSO EN MOVIMIENTO</span><span class="live-label" id="live-label"><i></i>DEMO</span></div>
+          <div class="heart-stage">
+            <div class="heart-halo"></div>
+            <svg id="anatomical-heart" viewBox="0 0 360 360" role="img" aria-labelledby="heart-title heart-desc">
+              <title id="heart-title">Ilustración de un corazón anatómico</title><desc id="heart-desc">Una representación ilustrativa que se contrae con los eventos de pulso. No es una imagen ni una medición del corazón.</desc>
+              <defs>
+                <linearGradient id="heart-body" x1=".1" y1="0" x2=".9" y2="1"><stop stop-color="#eb939b"/><stop offset=".45" stop-color="#cd5c76"/><stop offset="1" stop-color="#933957"/></linearGradient>
+                <linearGradient id="heart-right" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#db7b8d"/><stop offset="1" stop-color="#ab3d60"/></linearGradient>
+                <linearGradient id="aorta" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#d96c82"/><stop offset="1" stop-color="#a93b60"/></linearGradient>
+                <linearGradient id="blue-vessel" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#91b1bd"/><stop offset="1" stop-color="#537e93"/></linearGradient>
+                <linearGradient id="heart-shine" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f9c8bd" stop-opacity=".5"/><stop offset="1" stop-color="#f9c8bd" stop-opacity="0"/></linearGradient>
+              </defs>
+              <g class="heart-illustration">
+                <path d="M138 147 126 67Q128 60 144 59L155 144" fill="url(#blue-vessel)" stroke="#5d8295" stroke-width="2"/>
+                <path d="M170 135C148 111 152 73 168 52 184 31 214 31 232 50 250 68 251 93 240 118L217 128C227 101 229 79 214 65 203 55 191 59 185 73 178 89 183 103 196 119" fill="url(#aorta)" stroke="#a94a66" stroke-width="2"/>
+                <path d="m178 49-5-19q0-5 9-5l7 19m9-4 1-24q5-6 13 0l-2 24m14 7 11-21q7-3 13 4l-11 23" fill="#b54a69" stroke="#a94a66" stroke-width="2" stroke-linejoin="round"/>
+                <path d="M180 153C180 118 212 90 246 87L288 88 291 111 251 112C224 115 210 135 212 154" fill="url(#blue-vessel)" stroke="#5d8295" stroke-width="2"/>
+                <path d="M218 139 277 130Q287 134 282 146L232 158M219 158l54-5q11 5 4 16l-52 10" fill="#bd5975" stroke="#a64c67" stroke-width="2"/>
+                <path d="M153 116C133 94 99 102 92 129 85 149 94 166 104 180L159 181 176 142" fill="#df8692" stroke="#b66075" stroke-width="2"/>
+                <path d="M170 142C150 117 116 124 99 145 78 172 88 210 104 239 124 276 164 305 214 326 234 314 260 277 272 242 290 192 273 142 246 129 221 117 193 130 181 148Z" fill="url(#heart-body)" stroke="#a64d68" stroke-width="2.5"/>
+                <path d="M175 145C190 158 189 190 199 217 212 252 216 285 214 326 163 304 128 278 111 248 92 218 91 190 105 167 125 139 150 131 175 145Z" fill="url(#heart-right)" opacity=".72"/>
+                <path d="M103 168C107 143 145 127 164 148 144 144 121 155 114 179 103 210 122 245 143 262 116 246 90 205 103 168Z" fill="url(#heart-shine)"/>
+                <path d="M184 151C189 174 190 199 199 223 209 250 213 284 214 317" fill="none" stroke="#953b5b" stroke-width="5" opacity=".27" stroke-linecap="round"/>
+                <g class="coronary-vessels" fill="none" stroke="#e8bb9c" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" opacity=".9">
+                  <path d="M176 146C184 163 195 176 200 198 204 220 210 240 223 260L235 280"/>
+                  <path d="M194 180c15-10 29-14 43-14l18-7M210 174l2-17m12 13 14 15 21 9M239 184l5-11"/>
+                  <path d="M199 198c-17-7-34-13-55-12l-22 8m36-7-9-18-15-8m13 25-5 15-13 10"/>
+                  <path d="m206 225 24-14 19-2m-19 2 9-16m-23 40 27 7 13 15M224 259l-14 15-2 19m-10-90-10 26-10 17m12-22-15-3-12-10M201 241l-4 27 7 17"/>
+                </g>
+                <g id="conduction-path" fill="none" stroke="#ffeab3" stroke-width="2.5" stroke-linecap="round" opacity="0">
+                  <path d="M143 137 167 168 183 180 191 218 187 258 201 284M191 218l26 33 24 13" stroke-dasharray="5 5"/>
+                  <circle cx="143" cy="137" r="5" fill="#ffeab3"/><circle cx="183" cy="180" r="4" fill="#ffeab3"/>
+                </g>
+              </g>
+            </svg>
+            <span class="heart-marker marker-one"></span><span class="heart-marker marker-two"></span>
+          </div>
+          <figcaption><label class="checkbox-label"><input type="checkbox" id="conduction-toggle">Mostrar vía de conducción ilustrativa</label><p>Ilustración anatómica; el sensor registra el pulso en el dedo.</p></figcaption>
+        </figure>
+      </section>
+
+      <section class="waveform-section" aria-labelledby="waveform-title">
+        <div class="section-heading"><div><p class="eyebrow">01 / FORMA DE ONDA</p><h2 id="waveform-title">Tu pulso, en una línea<span>.</span></h2></div><div class="chart-actions"><label class="select-label">Ventana<select id="history-select" aria-label="Ventana de tiempo"><option value="5">5 segundos</option><option value="10">10 segundos</option><option value="15">15 segundos</option></select></label><button class="outline-button" id="pause-button" aria-pressed="false"><svg><use href="#icon-pause"/></svg><span>Pausar gráfica</span></button></div></div>
+        <div class="chart-toolbar"><span class="chart-legend"><i></i>Señal PPG <span id="chart-source">/ simulada</span></span><div class="chart-toggles"><label class="checkbox-label"><input type="checkbox" id="grid-toggle" checked>Cuadrícula</label><label class="checkbox-label"><input type="checkbox" id="beats-toggle" checked>Marcar latidos</label></div></div>
+        <div class="chart-wrap" id="chart-wrap"><canvas id="waveform-canvas" role="img" aria-label="Gráfica de la señal de pulso PPG a lo largo del tiempo"></canvas><div class="chart-empty" id="chart-empty" hidden><span class="empty-line" aria-hidden="true">⌁</span><strong>La próxima línea empieza contigo.</strong><p>Conecta el Arduino o inicia una demostración.</p><button class="outline-button" id="empty-demo">Ver demostración <svg><use href="#icon-play"/></svg></button></div><span class="paused-badge" id="paused-badge" hidden>GRÁFICA EN PAUSA</span></div>
+        <div class="chart-footer"><span><i class="status-dot"></i><span id="acquisition-label">Señal simulada · sin conexión al sensor</span></span><span>ADC <span class="separator">/</span> Tiempo en segundos</span></div>
+      </section>
+
+      <section class="session-strip" aria-label="Sesión de observación"><div><span class="session-dot"></span><span class="metric-label">ESTA SESIÓN</span></div><div><span class="session-label">Tiempo</span><strong id="session-duration">00:00</strong></div><div><span class="session-label">Pulsos registrados</span><strong id="beat-count">0</strong></div><div class="session-source"><span class="session-label">Origen de los datos</span><strong id="session-source">Demostración</strong></div><button class="text-button" id="export-button"><svg><use href="#icon-download"/></svg>Exportar CSV</button></section>
+    </main>
+
+    <footer class="page-footer"><p><span class="footer-brand">pulso.</span> Hecho para observar y aprender.</p><p>Prototipo educativo · No es un dispositivo de diagnóstico.</p><button class="text-button" id="demo-button">Reiniciar demo <span aria-hidden="true">↗</span></button></footer>
+  </div>
+
+  <dialog id="help-dialog" aria-labelledby="help-title"><div class="dialog-content"><button class="close-dialog" id="close-help" aria-label="Cerrar ayuda">×</button><p class="eyebrow">DE LA LUZ A LA PANTALLA</p><h2 id="help-title">Así llega tu pulso.</h2><p>El sensor observa cambios de luz en el dedo. Arduino procesa esa señal y envía los datos por USB a esta página.</p><ol><li>Abre la página en <strong>Chrome o Edge de escritorio</strong> usando la dirección local del proyecto.</li><li>Carga tu programa en Arduino y <strong>cierra el Monitor Serie y el Serial Plotter</strong> para liberar el puerto.</li><li>Elige la misma velocidad de tu programa: <label class="baud-label">Velocidad USB<select id="baud-select"><option value="115200">115200 baudios</option><option value="57600">57600 baudios</option><option value="38400">38400 baudios</option><option value="19200">19200 baudios</option><option value="9600">9600 baudios</option></select></label></li><li>Presiona <strong>Conectar Arduino</strong> y selecciona su puerto.</li></ol><div class="format-note"><strong>Formato recomendado, una línea por muestra:</strong><code>{"signal":512,"bpm":72,"ibi":833,"beat":true}</code><p>También se aceptan líneas S512 / B72 / Q833, o un número de señal por línea. Con solo señal cruda se dibuja la gráfica; los BPM esperan la estimación enviada por Arduino.</p></div><p class="dialog-footnote">La animación del corazón y la vía de conducción son ilustrativas. La gráfica representa una señal óptica PPG, no un electrocardiograma.</p></div></dialog>
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+</body>
+</html>
