@@ -9,6 +9,7 @@ const allowed = new Map([
   ['/styles.css', 'text/css; charset=utf-8'],
   ['/app.js', 'text/javascript; charset=utf-8'],
   ['/protocol.js', 'text/javascript; charset=utf-8'],
+  ['/signal.js', 'text/javascript; charset=utf-8'],
 ]);
 const server = http.createServer(async (request, response) => {
   const route = new URL(request.url, 'http://localhost').pathname;

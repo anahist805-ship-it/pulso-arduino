@@ -17,6 +17,8 @@ export function parseLine(line) {
         ibi: numeric(value.ibi),
         beat: value.beat === true || value.beat === 1,
       };
+      if (Number.isInteger(value.ms) && value.ms >= 0 && value.ms <= 0xffffffff) record.ms = value.ms;
+      if (value.clipped === true) record.clipped = true;
     } else {
       const playground = /^([SBQ])\s*(-?\d+(?:\.\d+)?)$/i.exec(text);
       if (playground) {
@@ -35,7 +37,7 @@ export function parseLine(line) {
   if (!(record.bpm > 0 && record.bpm <= 1000)) delete record.bpm;
   if (!(record.ibi > 0 && record.ibi <= 60000)) delete record.ibi;
   if (!Number.isFinite(record.signal)) delete record.signal;
-  return record.signal !== undefined || record.bpm !== undefined || record.ibi !== undefined ? record : null;
+  return record.signal !== undefined || record.bpm !== undefined || record.ibi !== undefined || record.clipped ? record : null;
 }
 
 // El USB entrega fragmentos: una lectura no equivale a una línea completa.
