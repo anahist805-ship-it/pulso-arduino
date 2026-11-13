@@ -66,7 +66,7 @@ El formato recomendado es una línea JSON por muestra:
 
 Los campos no disponibles pueden omitirse. Los números del ejemplo solo muestran el formato. También se aceptan mensajes `S512`, `B72`, `Q833`, CSV y un número de señal por línea.
 
-Si solo llega señal cruda, se dibuja la gráfica; los BPM y los eventos de latido esperan datos del programa de Arduino. La señal no recibe un filtrado adicional en el navegador.
+La gráfica aplica un suavizado ligero. El CSV conserva las muestras ADC originales e indica si hay saturación. Los BPM y el IBI se ocultan durante la saturación. El sketch puede enviar `ms` para conservar el tiempo de muestreo y `clipped: true` para indicar saturación.
 
 ## Tecnologías y estructura
 

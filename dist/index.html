@@ -31,28 +31,58 @@
 
     <main>
       <section class="page-intro" aria-labelledby="page-title">
-        <div><p class="eyebrow">BIOSEÑALES / MONITOR EN TIEMPO REAL</p><h1 id="page-title">Cada latido cuenta<span>.</span></h1><p class="intro-copy">Observa el ritmo. Explora la señal. Conecta con tu pulso.</p></div>
+        <h1 id="page-title">Monitor de pulso</h1>
         <button class="text-button help-trigger" aria-haspopup="dialog"><svg><use href="#icon-help"/></svg>Cómo funciona<svg class="arrow"><use href="#icon-arrow"/></svg></button>
       </section>
 
       <div class="demo-notice" id="demo-notice"><span class="notice-dot"></span><p><strong>Estás viendo una demostración.</strong> La señal y los valores son simulados. Conecta tu Arduino para ver mediciones reales.</p><button id="stop-demo" class="notice-button">Salir de demo <span aria-hidden="true">↗</span></button></div>
 
-      <section class="overview" aria-label="Lecturas del pulso">
-        <div class="rate-panel">
-          <div class="metric-label"><span class="small-square"></span>FRECUENCIA ESTIMADA</div>
-          <div class="big-number"><span id="bpm-value">—</span><span class="big-unit">BPM</span></div>
-          <p class="metric-description">Latidos por minuto</p>
-          <div class="signal-status" id="reading-status"><i></i><span>Datos de demostración</span></div>
-          <div class="mini-caption"><span class="tiny-rule"></span>Un instante de tu ritmo.</div>
-        </div>
+      <section class="monitor" aria-label="Onda y lecturas del pulso">
+        <section class="waveform-section" aria-labelledby="waveform-title">
+          <div class="section-heading">
+            <div>
+              <h2 id="waveform-title">Onda de pulso <span>PPG</span></h2>
+              <p class="wave-description">Variación del volumen de sangre en el dedo.</p>
+            </div>
+            <div class="chart-actions">
+              <label class="select-label">Ventana<select id="history-select" aria-label="Ventana de tiempo"><option value="5">5 segundos</option><option value="10">10 segundos</option><option value="15">15 segundos</option></select></label>
+              <button class="outline-button" id="pause-button" aria-pressed="false"><svg><use href="#icon-pause"/></svg><span>Pausar gráfica</span></button>
+            </div>
+          </div>
+          <div class="chart-wrap" id="chart-wrap">
+            <canvas id="waveform-canvas" role="img" aria-label="Gráfica de la señal de pulso PPG a lo largo del tiempo"></canvas>
+            <div class="chart-empty" id="chart-empty" hidden>
+              <strong id="chart-message">Conecta el Arduino</strong>
+              <p id="chart-hint">También puedes explorar una señal de demostración.</p>
+              <button class="outline-button" id="empty-demo">Ver demostración <svg><use href="#icon-play"/></svg></button>
+            </div>
+            <span class="paused-badge" id="paused-badge" hidden>GRÁFICA EN PAUSA</span>
+          </div>
+          <div class="chart-toolbar">
+            <span class="chart-legend"><i></i><span id="chart-source">Demostración</span></span>
+            <div class="chart-toggles"><label class="checkbox-label"><input type="checkbox" id="grid-toggle" checked>Cuadrícula</label><label class="checkbox-label"><input type="checkbox" id="beats-toggle" checked>Marcar pulsos</label></div>
+          </div>
+          <div class="chart-footer"><span id="acquisition-label">Onda simulada</span><span>ADC · Tiempo en segundos</span></div>
+        </section>
 
-        <div class="details-panel">
-          <div class="detail-metric"><p class="metric-label">INTERVALO ENTRE PULSOS</p><div class="detail-number"><span id="ibi-value">—</span><span>ms</span></div><p>Tiempo entre dos latidos detectados.</p></div>
-          <div class="detail-metric amplitude-metric"><p class="metric-label">AMPLITUD DE LA SEÑAL</p><div class="detail-number"><span id="amplitude-value">—</span><span>ADC</span></div><p>Pico a pico durante los últimos 2 s.</p></div>
+        <div class="monitor-readings">
+          <div class="rate-panel">
+            <p class="metric-label">FRECUENCIA DEL PULSO</p>
+            <div class="big-number"><span id="bpm-value">—</span><span class="big-unit">BPM</span></div>
+            <p class="metric-description">Latidos por minuto</p>
+            <div class="signal-status" id="reading-status"><i></i><span>Datos de demostración</span></div>
+          </div>
+          <div class="details-panel">
+            <div class="detail-metric"><p class="metric-label">INTERVALO ENTRE PULSOS</p><div class="detail-number"><span id="ibi-value">—</span><span>ms</span></div><p>Tiempo entre dos pulsos detectados.</p></div>
+            <div class="detail-metric amplitude-metric"><p class="metric-label">AMPLITUD DE LA SEÑAL</p><div class="detail-number"><span id="amplitude-value">—</span><span>ADC</span></div><p>Pico a pico durante los últimos 2 s.</p></div>
+          </div>
         </div>
+      </section>
+
+      <section class="session-strip" aria-label="Sesión de observación"><div><span class="session-dot"></span><span class="metric-label">ESTA SESIÓN</span></div><div><span class="session-label">Tiempo</span><strong id="session-duration">00:00</strong></div><div><span class="session-label">Pulsos registrados</span><strong id="beat-count">0</strong></div><div class="session-source"><span class="session-label">Origen de los datos</span><strong id="session-source">Demostración</strong></div><button class="text-button" id="export-button"><svg><use href="#icon-download"/></svg>Exportar CSV</button></section>
 
         <figure class="heart-panel">
-          <div class="heart-topline"><span class="metric-label">EL PULSO EN MOVIMIENTO</span><span class="live-label" id="live-label"><i></i>DEMO</span></div>
+          <div class="heart-topline"><span class="metric-label">CORAZÓN ILUSTRATIVO</span><span class="live-label" id="live-label"><i></i>DEMO</span></div>
           <div class="heart-stage">
             <div class="heart-halo"></div>
             <svg id="anatomical-heart" viewBox="0 0 360 360" role="img" aria-labelledby="heart-title heart-desc">
@@ -89,24 +119,14 @@
             </svg>
             <span class="heart-marker marker-one"></span><span class="heart-marker marker-two"></span>
           </div>
-          <figcaption><label class="checkbox-label"><input type="checkbox" id="conduction-toggle">Mostrar vía de conducción ilustrativa</label><p>Ilustración anatómica; el sensor registra el pulso en el dedo.</p></figcaption>
+          <figcaption><label class="checkbox-label"><input type="checkbox" id="conduction-toggle">Mostrar vía de conducción ilustrativa</label><p>La animación acompaña los pulsos detectados en el dedo.</p></figcaption>
         </figure>
-      </section>
-
-      <section class="waveform-section" aria-labelledby="waveform-title">
-        <div class="section-heading"><div><p class="eyebrow">01 / FORMA DE ONDA</p><h2 id="waveform-title">Tu pulso, en una línea<span>.</span></h2></div><div class="chart-actions"><label class="select-label">Ventana<select id="history-select" aria-label="Ventana de tiempo"><option value="5">5 segundos</option><option value="10">10 segundos</option><option value="15">15 segundos</option></select></label><button class="outline-button" id="pause-button" aria-pressed="false"><svg><use href="#icon-pause"/></svg><span>Pausar gráfica</span></button></div></div>
-        <div class="chart-toolbar"><span class="chart-legend"><i></i>Señal PPG <span id="chart-source">/ simulada</span></span><div class="chart-toggles"><label class="checkbox-label"><input type="checkbox" id="grid-toggle" checked>Cuadrícula</label><label class="checkbox-label"><input type="checkbox" id="beats-toggle" checked>Marcar latidos</label></div></div>
-        <div class="chart-wrap" id="chart-wrap"><canvas id="waveform-canvas" role="img" aria-label="Gráfica de la señal de pulso PPG a lo largo del tiempo"></canvas><div class="chart-empty" id="chart-empty" hidden><span class="empty-line" aria-hidden="true">⌁</span><strong>La próxima línea empieza contigo.</strong><p>Conecta el Arduino o inicia una demostración.</p><button class="outline-button" id="empty-demo">Ver demostración <svg><use href="#icon-play"/></svg></button></div><span class="paused-badge" id="paused-badge" hidden>GRÁFICA EN PAUSA</span></div>
-        <div class="chart-footer"><span><i class="status-dot"></i><span id="acquisition-label">Señal simulada · sin conexión al sensor</span></span><span>ADC <span class="separator">/</span> Tiempo en segundos</span></div>
-      </section>
-
-      <section class="session-strip" aria-label="Sesión de observación"><div><span class="session-dot"></span><span class="metric-label">ESTA SESIÓN</span></div><div><span class="session-label">Tiempo</span><strong id="session-duration">00:00</strong></div><div><span class="session-label">Pulsos registrados</span><strong id="beat-count">0</strong></div><div class="session-source"><span class="session-label">Origen de los datos</span><strong id="session-source">Demostración</strong></div><button class="text-button" id="export-button"><svg><use href="#icon-download"/></svg>Exportar CSV</button></section>
     </main>
 
     <footer class="page-footer"><p><span class="footer-brand">pulso.</span> Hecho para observar y aprender.</p><p>Prototipo educativo · No es un dispositivo de diagnóstico.</p><button class="text-button" id="demo-button">Reiniciar demo <span aria-hidden="true">↗</span></button></footer>
   </div>
 
-  <dialog id="help-dialog" aria-labelledby="help-title"><div class="dialog-content"><button class="close-dialog" id="close-help" aria-label="Cerrar ayuda">×</button><p class="eyebrow">DE LA LUZ A LA PANTALLA</p><h2 id="help-title">Así llega tu pulso.</h2><p>El sensor observa cambios de luz en el dedo. Arduino procesa esa señal y envía los datos por USB a esta página.</p><ol><li>Abre la página en <strong>Chrome o Edge de escritorio</strong> usando la dirección local del proyecto.</li><li>Carga tu programa en Arduino y <strong>cierra el Monitor Serie y el Serial Plotter</strong> para liberar el puerto.</li><li>Elige la misma velocidad de tu programa: <label class="baud-label">Velocidad USB<select id="baud-select"><option value="115200">115200 baudios</option><option value="57600">57600 baudios</option><option value="38400">38400 baudios</option><option value="19200">19200 baudios</option><option value="9600">9600 baudios</option></select></label></li><li>Presiona <strong>Conectar Arduino</strong> y selecciona su puerto.</li></ol><div class="format-note"><strong>Formato recomendado, una línea por muestra:</strong><code>{"signal":512,"bpm":72,"ibi":833,"beat":true}</code><p>También se aceptan líneas S512 / B72 / Q833, o un número de señal por línea. Con solo señal cruda se dibuja la gráfica; los BPM esperan la estimación enviada por Arduino.</p></div><p class="dialog-footnote">La animación del corazón y la vía de conducción son ilustrativas. La gráfica representa una señal óptica PPG, no un electrocardiograma.</p></div></dialog>
+  <dialog id="help-dialog" aria-labelledby="help-title"><div class="dialog-content"><button class="close-dialog" id="close-help" aria-label="Cerrar ayuda">×</button><p class="eyebrow">DE LA LUZ A LA PANTALLA</p><h2 id="help-title">Así llega tu pulso.</h2><p>El sensor ilumina el dedo y mide cambios de luz reflejada a medida que pasa la sangre. La curva es la onda de pulso PPG. Los BPM indican cuántos pulsos ocurren por minuto y el IBI indica el tiempo entre dos pulsos.</p><ol><li>Abre la página en <strong>Chrome o Edge de escritorio</strong>.</li><li>Carga tu programa en Arduino y <strong>cierra el Monitor Serie y el Serial Plotter</strong> para liberar el puerto.</li><li>Elige la velocidad que usa tu programa. <label class="baud-label">Velocidad USB<select id="baud-select"><option value="115200">115200 baudios</option><option value="57600">57600 baudios</option><option value="38400">38400 baudios</option><option value="19200">19200 baudios</option><option value="9600">9600 baudios</option></select></label></li><li>Presiona <strong>Conectar Arduino</strong> y selecciona su puerto.</li></ol><div class="format-note"><strong>Formato recomendado, una línea por muestra:</strong><code>{"signal":512,"bpm":72,"ibi":833,"beat":true}</code><p>También se aceptan líneas S512 / B72 / Q833, o un número de señal por línea. Con solo señal cruda se dibuja la gráfica; los BPM esperan la estimación enviada por Arduino.</p></div><p class="dialog-footnote">La onda PPG refleja cambios de volumen sanguíneo. Un electrocardiograma registra la actividad eléctrica del corazón. El sensor del proyecto mide el pulso. Un oxímetro mide también la saturación de oxígeno.</p></div></dialog>
   <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
 </body>
 </html>

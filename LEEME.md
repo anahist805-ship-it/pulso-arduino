@@ -51,7 +51,7 @@ Una línea JSON por muestra, terminada en salto de línea:
 
 Los números del ejemplo solo explican el formato; no son mediciones de tu montaje.
 
-- `signal`: valor de la señal, en cuentas ADC. Es la señal que se dibuja. La página no aplica un filtro adicional.
+- `signal`: valor de la señal en cuentas ADC. La gráfica aplica un suavizado ligero y el CSV conserva el valor original.
 - `bpm`: estimación de pulsaciones por minuto calculada en Arduino.
 - `ibi`: intervalo entre pulsos en milisegundos. Si solo llega el intervalo, la página calcula BPM = 60000 / ibi.
 - `beat`: `true` únicamente en la muestra donde se detecta un nuevo pulso; `false` en las demás. Controla la animación y el contador.
@@ -59,7 +59,7 @@ Los números del ejemplo solo explican el formato; no son mediciones de tu monta
 
 También acepta mensajes `S512`, `B72` y `Q833`, cada uno en su propia línea (señal, BPM y tiempo entre pulsos respectivamente); CSV `512,72,833,1`; o un número como `512` por línea. Con números de señal solamente **se dibuja la gráfica y se muestra amplitud, pero no se inventan BPM, intervalos ni eventos de latido**.
 
-La gráfica muestra la señal que envía Arduino: si quieres una PPG filtrada, el programa debe enviar la señal filtrada en `signal`. PPG no es ECG. El corazón es una ilustración y la amplitud ADC no mide la fuerza de contracción cardíaca.
+El sketch puede incluir `ms` para conservar el tiempo de cada muestra y `clipped: true` para señalar saturación. Si la lectura del Arduino Uno llega a los extremos del ADC, la página deja un hueco en la onda y oculta los BPM y el IBI hasta recuperar la señal.
 
 ## Archivos para editar
 

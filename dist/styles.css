@@ -5,3 +5,72 @@
 @media(max-width:1050px){.app-shell{width:calc(100% - 60px)}.brand-caption{display:none}.overview{grid-template-columns:1fr .95fr 1.2fr}.details-panel{padding-left:22px}.big-number>span:first-child{font-size:105px}.heart-panel{padding-left:10px}.heart-topline .metric-label{font-size:7px;letter-spacing:.6px}.heart-stage{height:250px}#anatomical-heart{width:250px;height:250px}.session-strip{gap:22px}.session-strip>div{gap:7px}.session-strip>div:first-child{margin-right:0}.session-source{display:none!important}}
 @media(max-width:700px){.app-shell{width:calc(100% - 36px)}.topbar{height:76px;gap:10px}.brand{font-size:29px}.brand-symbol{width:28px;height:28px;margin-right:7px}.brand-symbol svg{width:24px}.topbar-actions{gap:12px}.source-pill{font-size:9px;gap:5px}.primary-button{font-size:10px;min-height:37px;padding:0 11px;gap:5px}.primary-button svg{width:15px}.page-intro{padding:28px 0 22px;align-items:flex-start}.page-intro h1{font-size:29px;letter-spacing:-1.2px}.eyebrow{font-size:7px;letter-spacing:1.2px}.intro-copy{font-size:10px;line-height:1.6;max-width:240px}.help-trigger{font-size:0;margin:25px 1px 0 12px}.help-trigger svg{width:18px}.help-trigger .arrow{display:none}.demo-notice{font-size:9px;align-items:flex-start;padding:10px}.notice-dot{margin-top:5px}.notice-button{font-size:0;padding:0;margin-left:auto}.notice-button span{font-size:16px;margin:0}.overview{grid-template-columns:1fr 1fr;margin-top:14px;min-height:0}.rate-panel{padding:22px 0 20px}.metric-label{font-size:7px;letter-spacing:.8px}.big-number>span:first-child{font-size:94px;letter-spacing:-6px}.big-number{gap:9px;margin-top:13px}.big-unit{font-size:8px;letter-spacing:1px}.metric-description,.signal-status{font-size:9px}.mini-caption{font-size:10px;margin-top:24px}.details-panel{margin:17px 0 20px;padding:8px 0 8px 22px}.detail-number>span:first-child{font-size:34px}.detail-number>span:last-child{font-size:9px}.detail-metric>p:last-child{font-size:9px;max-width:140px;margin-top:4px}.amplitude-metric{margin-top:23px}.heart-panel{grid-column:1/-1;padding:10px 0 19px;border-top:1px solid var(--line);margin-top:0}.heart-topline{position:absolute;left:0;right:0;top:17px;align-items:flex-start}.heart-topline .metric-label{font-size:7px;max-width:85px;line-height:1.9}.heart-stage{height:225px;margin-top:0}#anatomical-heart{height:238px;width:238px}.heart-halo{width:170px;height:170px}.heart-panel figcaption{margin-top:0}.heart-panel figcaption p{font-size:8px;max-width:none}.marker-one{left:20%;top:42%}.marker-two{right:21%;bottom:32%}.waveform-section{padding-top:24px}h2{font-size:21px}.section-heading{align-items:flex-start;gap:8px}.section-heading .eyebrow{font-size:7px;margin-bottom:8px}.chart-actions{gap:7px;flex-direction:column;align-items:flex-end}.select-label{font-size:0;gap:0}select{min-height:28px;padding:5px 18px 5px 8px;font-size:9px}.outline-button{min-height:28px;font-size:9px;padding:0 8px;gap:5px}.chart-toolbar{margin-top:21px;gap:10px}.chart-legend{font-size:9px;gap:4px}.chart-legend>span{font-size:7px}.chart-toggles{gap:10px}.chart-toggles .checkbox-label{font-size:8px;gap:4px}.checkbox-label input{width:9px;height:9px}.chart-wrap{height:208px}.chart-footer{font-size:7px;align-items:flex-start;line-height:1.7}.chart-footer>span:last-child{max-width:95px;text-align:right}.separator{margin:0 3px}.session-strip{gap:16px;flex-wrap:wrap;padding:17px 0;justify-content:space-between}.session-strip>div:first-child{flex-basis:100%;margin-bottom:0}.session-strip .metric-label{font-size:7px}.session-strip>div{gap:5px}.session-label{font-size:8px}.session-strip strong{font-size:10px}.session-strip>.text-button{font-size:8px;margin-left:0;gap:4px}.session-strip>.text-button svg{width:12px}.page-footer{flex-wrap:wrap;gap:12px;padding:19px 0 24px}.page-footer>p:first-child{flex-basis:100%;font-size:8px}.page-footer>p:nth-child(2){font-size:7px}.page-footer>.text-button{font-size:8px}.dialog-content{padding:28px 22px}.chart-empty strong{font-size:15px}.chart-empty p{font-size:10px}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
+
+/* El trazo y las lecturas forman un solo monitor. */
+.page-intro{padding:26px 0 20px;align-items:center}
+.page-intro h1{font-size:clamp(30px,3.4vw,45px);margin:0}
+.page-intro .help-trigger{margin-top:0;font-size:13px}
+.monitor{
+  display:grid;grid-template-columns:minmax(0,1fr) minmax(230px,27%);gap:26px;
+  margin:20px 0 22px;padding:24px;background:#15241e;color:#e6f1e9;
+  border:1px solid #31493d;border-radius:12px;
+}
+.monitor .waveform-section{min-width:0;padding-top:0}
+.monitor h2{font-size:clamp(21px,2.1vw,29px);line-height:1.2;letter-spacing:-.55px}
+.monitor h2 span{display:inline-block;margin-left:4px;color:#91c6a9;font:11px var(--mono);letter-spacing:.04em;vertical-align:middle}
+.wave-description{color:#a2b9ad;font-size:12px;margin:7px 0 0;line-height:1.4}
+.monitor .section-heading{min-height:45px;gap:12px}
+.monitor .chart-actions{gap:8px}
+.monitor .select-label{color:#b6c9be}
+.monitor select,.monitor .outline-button{background:#20332a;border-color:#405b4d;color:#e6f1e9;font-size:11px;min-height:34px}
+.monitor select:hover,.monitor .outline-button:hover{background:#2a4436}
+.monitor .chart-wrap{margin-top:15px;height:clamp(185px,31vh,320px);border:1px solid #385243;border-radius:7px;overflow:hidden;background:#101e18}
+.monitor .chart-toolbar{margin:12px 0 5px}
+.monitor .chart-legend,.monitor .chart-legend>span,.monitor .checkbox-label{color:#b6c9be;font-size:11px}
+.monitor .chart-legend i{background:#78ecae}
+.monitor .checkbox-label input{border-color:#8ca99a}
+.monitor .checkbox-label input:checked{background:#5bc58d;border-color:#5bc58d}
+.monitor .chart-footer{color:#a2b9ad;font-size:10px;padding:3px 0 0;line-height:1.4}
+.monitor .chart-empty{background:#101e18ee;backdrop-filter:none;padding:12px}
+.monitor .chart-empty strong{font-size:19px;color:#f1f6f2}
+.monitor .chart-empty p{color:#b7cabf;font-size:12px;margin:0}
+.monitor .paused-badge{background:#344a3e;color:#e6f1e9}
+.monitor-readings{padding-left:22px;border-left:1px solid #385243;min-width:0}
+.monitor .rate-panel{padding:3px 0 20px;border-bottom:1px solid #385243}
+.monitor .metric-label{color:#b6c9be;font-size:10px;letter-spacing:.06em}
+.monitor .big-number{margin-top:4px;gap:9px}
+.monitor .big-number>span:first-child{color:#78ecae;font-size:clamp(55px,6.5vw,88px);letter-spacing:-.07em}
+.monitor .big-unit{color:#b6c9be;padding:0;font-size:13px;letter-spacing:.06em}
+.monitor .metric-description{color:#b6c9be;margin:1px 0 10px;font-size:12px}
+.monitor .signal-status{color:#c3d5ca;font-size:11px;line-height:1.4}
+.monitor .signal-status i{flex:none}
+.monitor .signal-status.real{color:#a0e9bb}
+.monitor .signal-status.real i{background:#78ecae}
+.monitor .signal-status.warning{color:#ffce9d}
+.monitor .signal-status.warning i{background:#efb481}
+.monitor .details-panel{border:0;margin:0;padding:16px 0 0}
+.monitor .detail-number{margin-top:2px}
+.monitor .detail-number>span:first-child{color:#e6f1e9;font-size:32px;letter-spacing:-.025em}
+.monitor .detail-number>span:last-child,.monitor .detail-metric>p:last-child{color:#a2b9ad;font-size:11px}
+.monitor .detail-metric>p:last-child{max-width:none;margin-top:3px}
+.monitor .amplitude-metric{margin-top:16px}
+main>.heart-panel{margin:20px auto 0;width:min(100%,450px);padding-left:0}
+
+@media(max-width:760px){
+  .monitor{grid-template-columns:minmax(0,1fr);gap:18px;padding:17px}
+  .monitor-readings{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);padding:15px 0 0;border:0;border-top:1px solid #385243}
+  .monitor .rate-panel{padding:0 10px 0 0;border:0}
+  .monitor .details-panel{padding:0 0 0 13px;border-left:1px solid #385243}
+  .monitor .chart-wrap{height:clamp(185px,27vh,230px)}
+  .monitor .chart-actions{flex-direction:row}
+  .monitor .metric-label{font-size:9px}
+  .monitor .detail-number>span:first-child{font-size:26px}
+}
+@media(max-width:440px){
+  .page-intro .help-trigger{font-size:0}
+  .monitor{padding:12px}
+  .monitor .chart-actions{flex-direction:column;align-items:stretch;gap:5px}
+  .monitor .chart-actions .outline-button,.monitor select{min-height:28px;font-size:9px}
+  .monitor .chart-legend>span,.monitor .chart-toggles .checkbox-label{font-size:9px}
+  .monitor .chart-footer{font-size:8px}
+}
